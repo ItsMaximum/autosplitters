@@ -7,7 +7,7 @@ state("Pineapple-Win64-Shipping")
 
 startup
 {
-	vars.newRun = true;
+	vars.newRun = false;
 	vars.startOffset = 137f/60f;
 
 	vars.mainMenuName = "/Game/Maps/IntroCutscene/IntroCutscene_P";
