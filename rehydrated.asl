@@ -12,6 +12,22 @@ startup
 
 	vars.mainMenuName = "/Game/Maps/IntroCutscene/IntroCutscene_P";
 	vars.finalLevel = "/Game/Maps/ChumBucketLab/Part3/ChumBucketLab_03_P";
+	
+	if (timer.CurrentTimingMethod == TimingMethod.RealTime)
+	{        
+		var timingMessage = MessageBox.Show (
+        "This game uses Time without Loads (Game Time) as the main timing method.\n"+
+        "LiveSplit is currently set to show Real Time (RTA).\n"+
+        "Would you like to set the timing method to Game Time?",
+        "Livesplit | GAME NAME",
+               MessageBoxButtons.YesNo,MessageBoxIcon.Question
+		);
+		
+		if (timingMessage == DialogResult.Yes)
+		{
+			timer.CurrentTimingMethod = TimingMethod.GameTime;
+		}
+	}
 }
 
 gameTime
