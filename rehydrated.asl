@@ -9,8 +9,7 @@ startup
 {
 	vars.newRun = false;
 	vars.startOffset = 137f/60f;
-	
-	vars.mainName = "/Game/Maps/MainMenu/MainMenu_P";
+
 	vars.mainMenuName = "/Game/Maps/IntroCutscene/IntroCutscene_P";
 	vars.finalLevel = "/Game/Maps/ChumBucketLab/Part3/ChumBucketLab_03_P";
 	
@@ -39,10 +38,12 @@ gameTime
 		return TimeSpan.FromSeconds(vars.startOffset);
 	}
 }
+
 reset
 {
-	return old.map != null && old.map != current.map && current.map == vars.mainName;
+	return !old.isLoading && current.isLoading && current.map == vars.mainMenuName;
 }
+
 start
 {
 	if(!old.isLoading && current.isLoading && current.map == vars.mainMenuName)
