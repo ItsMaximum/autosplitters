@@ -39,6 +39,11 @@ gameTime
 	}
 }
 
+reset
+{
+	return !old.isLoading && current.isLoading && current.map == vars.mainMenuName;
+}
+
 start
 {
 	if(!old.isLoading && current.isLoading && current.map == vars.mainMenuName)
