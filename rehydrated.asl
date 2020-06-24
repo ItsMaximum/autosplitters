@@ -11,7 +11,7 @@ startup
 	vars.startOffset = 137f/60f;
 
 	settings.Add("mainMenuReset", false, "Reset on Main Menu");
-    settings.Add("newGameReset", true, "Reset on New Game");
+	settings.Add("newGameReset", true, "Reset on New Game");
 
 	vars.mainMenu = "/Game/Maps/MainMenu/MainMenu_P";
 	vars.introCutscene = "/Game/Maps/IntroCutscene/IntroCutscene_P";
@@ -20,11 +20,11 @@ startup
 	if (timer.CurrentTimingMethod == TimingMethod.RealTime)
 	{        
 		var timingMessage = MessageBox.Show (
-        "This game uses Time without Loads (Game Time) as the main timing method.\n"+
-        "LiveSplit is currently set to show Real Time (RTA).\n"+
-        "Would you like to set the timing method to Game Time?",
-        "Livesplit | BFBB Rehydrated",
-        MessageBoxButtons.YesNo,MessageBoxIcon.Question
+			"This game uses Time without Loads (Game Time) as the main timing method.\n"+
+			"LiveSplit is currently set to show Real Time (RTA).\n"+
+			"Would you like to set the timing method to Game Time?",
+			"Livesplit | BFBB Rehydrated",
+			MessageBoxButtons.YesNo,MessageBoxIcon.Question
 		);
 		
 		if (timingMessage == DialogResult.Yes)
