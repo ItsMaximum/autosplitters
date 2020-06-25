@@ -8,7 +8,7 @@ state("Pineapple-Win64-Shipping")
 startup
 {
 	vars.newRun = false;
-	vars.startOffset = 137f/60f;
+	vars.startOffset = 138f/60f;
 
 	settings.Add("mainMenuReset", false, "Reset on Main Menu");
 	settings.Add("newGameReset", true, "Reset on New Game");
@@ -54,7 +54,7 @@ reset
 
 	if(settings["newGameReset"] && !reset)
 	{
-		reset = !old.isLoading && current.isLoading && current.map == vars.introCutscene;
+		reset = old.map != current.map && current.map == vars.introCutscene;
 	}
 
 	return reset;
@@ -62,7 +62,7 @@ reset
 
 start
 {
-	if(!old.isLoading && current.isLoading && current.map == vars.introCutscene)
+	if(old.isLoading && !current.isLoading && current.map == vars.introCutscene)
 	{
 		vars.newRun = true;
 		return true;
