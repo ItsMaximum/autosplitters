@@ -7,7 +7,7 @@ state("Pineapple-Win64-Shipping", "Rev 603296")
 
 state("Pineapple-Win64-Shipping", "Rev 603442")
 {
-	bool isLoading: "Pineapple-Win64-Shipping.exe", 0x03425558, 0xF8, 0x4B8;
+	bool isLoading: "Pineapple-Win64-Shipping.exe", 0x0331A650, 0x20, 0x1D0;
 	int spatCount: "Pineapple-Win64-Shipping.exe", 0x03415DB8, 0x8, 0x6E0;
 	string100  map: "Pineapple-Win64-Shipping.exe", 0x03416E10, 0x8A8, 0x0;
 }
