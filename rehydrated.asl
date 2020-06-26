@@ -1,8 +1,15 @@
-state("Pineapple-Win64-Shipping")
+state("Pineapple-Win64-Shipping", "Rev 603296")
 {
 	bool isLoading: "Pineapple-Win64-Shipping.exe", 0x0338B8D0, 0x20, 0x1A0;
 	int spatCount: "Pineapple-Win64-Shipping.exe", 0x03487038, 0x8, 0x6E0;
 	string100  map: "Pineapple-Win64-Shipping.exe", 0x3488090, 0x8A8, 0x0;
+}
+
+state("Pineapple-Win64-Shipping", "Rev 603442")
+{
+	bool isLoading: "Pineapple-Win64-Shipping.exe", 0x03425558, 0xF8, 0x4B8;
+	int spatCount: "Pineapple-Win64-Shipping.exe", 0x03415DB8, 0x8, 0x6E0;
+	string100  map: "Pineapple-Win64-Shipping.exe", 0x03416E10, 0x8A8, 0x0;
 }
 
 startup
@@ -32,6 +39,32 @@ startup
 			timer.CurrentTimingMethod = TimingMethod.GameTime;
 		}
 	}
+}
+
+init
+{
+	int moduleSize = modules.First().ModuleMemorySize;
+	print("Main Module Size: "+moduleSize.ToString());
+	if (moduleSize == 58867712)
+	{
+		version = "Rev 603296";
+	} 
+	else if (moduleSize == 58372096)
+	{
+		version = "Rev 603442";
+	}
+	else
+	{
+		version = "Unsupported: " + moduleSize.ToString();
+		MessageBox.Show("This game version is currently not supported.", "LiveSplit Auto Splitter - Unsupported Game Version");
+	}
+}
+
+update
+{
+	// Disable the autosplitter if the version is incorrect
+	if (version.Contains("Unsupported"))
+		return false;
 }
 
 gameTime
