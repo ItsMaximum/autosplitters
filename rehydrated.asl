@@ -85,7 +85,6 @@ update
 	if (vars.buildSpatList)
 	{
 		vars.buildSpatList = false;
-		vars.spatSplits = new List<int>();
 		for(int i = 1; i < 100; i++)
 		{
 			if(settings["spat"+i.ToString()])
@@ -136,6 +135,7 @@ start
 {
 	if(old.isLoading && !current.isLoading && current.map == vars.introCutscene)
 	{
+		vars.spatSplits = new List<int>();
 		if(settings["spatSplit"])
 			vars.buildSpatList = true; //Build a list of spatulas amounts that we split on (if option is checked)
 		vars.splitsQueued = 0;
@@ -152,7 +152,7 @@ isLoading
 
 split
 {
-	if(vars.spatSplits.Count > 0)
+	if(vars.spatSplits.Count > 0 && settings["spatSplit"])
 	{
 		if(current.spatCount >= vars.spatSplits[0])
 		{
