@@ -29,6 +29,9 @@ split{return old.endlevel != current.endlevel && current.endlevel == 623915057;}
 start{return old.position == 0 && current.position != 0;} 
 
 update {
+	print("[GD ASL] Player Position: " + current.position.ToString());
+	print("[GD ASL] Loading Music ? " + current.loadingMusic.ToString());
+	print("[GD ASL] Loading Level ? " + vars.loadingLevel.ToString());
 	if(!old.loadingMusic && current.loadingMusic) {
 		vars.loadingLevel = true;
 	}
