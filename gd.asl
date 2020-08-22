@@ -1,6 +1,6 @@
 state("GeometryDash"){
   bool loadingMusic : "GeometryDash.exe", 0x003222A8, 0x128, 0x34, 0xC0, 0xC;
-  int endlevel : "GeometryDash.exe", 0x3222D0, 0x164, 0x3C0, 0x12C;
+  string4 percentage : "GeometryDash.exe", 0x3222D0, 0x164, 0x124, 0xEC, 0x2A4, 0xE8, 0x8, 0x12C;
   float position : "GeometryDash.exe", 0x3222D0, 0x164, 0x124, 0xEC, 0x108, 0xE8, 0x8, 0x67C;
 }
 
@@ -24,14 +24,15 @@ startup {
 
 isLoading{return vars.loadingLevel;}
 
-split{return old.endlevel != current.endlevel && current.endlevel == 623915057;}
+split{return old.percentage != current.percentage && current.percentage == "100%";}
 
 start{return old.position == 0 && current.position != 0;} 
 
 update {
-	print("[GD ASL] Player Position: " + current.position.ToString());
-	print("[GD ASL] Loading Music ? " + current.loadingMusic.ToString());
-	print("[GD ASL] Loading Level ? " + vars.loadingLevel.ToString());
+	print("[GD ASL] Level Percentage: " + current.percentage + 
+	"\n[GD ASL] Player Position: " + current.position.ToString() +
+	"\n[GD ASL] Loading Music ? " + current.loadingMusic.ToString() +
+	"\n[GD ASL] Loading Level ? " + vars.loadingLevel.ToString());
 	if(!old.loadingMusic && current.loadingMusic) {
 		vars.loadingLevel = true;
 	}
