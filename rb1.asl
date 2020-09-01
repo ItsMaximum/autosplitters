@@ -27,3 +27,9 @@ reset {
 	}
 }
 
+update {
+	print("[RB1 ASL] Current Level: " + current.level + 
+	"\n[RB1 ASL] Last Level Split On: " + vars.lastLevelSplit +
+	"\n[RB1 ASL] Holding Right? " + current.right +
+	"\n[RB1 ASL] Flag Animation? " + current.win);
+}
