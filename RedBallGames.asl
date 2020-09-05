@@ -79,9 +79,7 @@ startup {
 }
 
 init {
-  if (current.file == "") {
-    throw new Exception(">>>>> Game Version has not been found yet!");
-  }
+  if (current.file == "") throw new Exception(">>>>> Game Version has not been found yet!");
 
   vars.lastLevelSplit = 0;
   vars.relevantLevels = new List<int>();
