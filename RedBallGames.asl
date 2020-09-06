@@ -83,8 +83,12 @@ init {
 
   vars.lastLevelSplit = 0;
   vars.relevantLevels = new List<int>();
+  
+  // gets the full file path and splits at backslashes
   vars.firstStringSplit = current.file.Split(new string[] { "\\" }, StringSplitOptions.None);
+  // gets the path after final backslash and splits the rest at " - Definitive Edition.swf"
   vars.secondStringSplit = vars.firstStringSplit[vars.firstStringSplit.Length - 1].Split(new string[] { " - Definitive Edition.swf" }, StringSplitOptions.None);
+  // sets the string between final backslash and " - Definitive Edition.swf" as the version
   version = vars.secondStringSplit[0];
 
   switch (version) {
