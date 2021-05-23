@@ -39,6 +39,13 @@ state("Flash Player", "Red Ball 4 Vol.3") {
   string300 file   : 0x1015861;
 }
 
+state("Flash Player", "Red Ball 4 Vol.Nice") {
+  int cp           : 0x100B038, 0x268, 0x1A0, 0x28, 0x90, 0x20, 0xB0;
+  int level        : 0x1012CD8, 0x78, 0x160, 0x0, 0xA8;
+  float bossHealth : 0x01011C88, 0x70, 0xD8, 0xC8, 0xD8, 0xC8, 0x180, 0x11C;
+  string300 file   : 0x1015861;
+}
+
 state("Flash Player", "Red Ball 5") {
   int level          : 0x100B038, 0x310, 0x3B8, 0xB0, 0xB0;
   int starsForUnlock : 0x100B038, 0x310, 0x3B8, 0xB0, 0x90, 0x160, 0x194;
@@ -70,7 +77,7 @@ state("Flash Player", "Red&Blue Balls 3") {
 startup {
   vars.timerModel = new TimerModel { CurrentState = timer };
   vars.redBall1to3 = new List<string>() { "Red Ball", "Red Ball 2", "Red Ball 3" };
-  vars.redBall4 = new List<string>() { "Red Ball 4 Vol.1", "Red Ball 4 Vol.2", "Red Ball 4 Vol.3" };
+  vars.redBall4 = new List<string>() { "Red Ball 4 Vol.1", "Red Ball 4 Vol.2", "Red Ball 4 Vol.3", "Red Ball 4 Vol.Nice" };
   vars.redAndBlue2and3 = new List<string>() { "Red&Blue Balls 2", "Red&Blue Balls 3" };
 
   settings.Add("rb4cpSplits", false, "Red Ball 4: split on every checkpoint (includes mid-point of boss fight)");
