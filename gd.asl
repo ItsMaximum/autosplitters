@@ -1,12 +1,23 @@
-state("GeometryDash"){
-  bool loadingMusic : "GeometryDash.exe", 0x003222A8, 0x128, 0x34, 0xC0, 0xC;
+state("GeometryDash", "2.11"){
+  bool loadingMusic : "GeometryDash.exe", 0x3222A8, 0x128, 0x34, 0xC0, 0xC;
   string3 percentage : "GeometryDash.exe", 0x3222D0, 0x164, 0x124, 0xEC, 0x2A4, 0xE8, 0x8, 0x12C;
   float position : "GeometryDash.exe", 0x3222D0, 0x164, 0x124, 0xEC, 0x108, 0xE8, 0x8, 0x67C;
   int scene : "GeometryDash.exe", 0x3222D0, 0x1DC;
 }
 
+state("GeometryDash", "2.2"){
+  bool loadingMusic : "GeometryDash.exe", 0x4E82C0, 0x128, 0x0, 0x0, 0x40;
+  string3 percentage : "GeometryDash.exe", 0x4E82E8, 0x198, 0xC0, 0x34, 0xC, 0x1C, 0x148;
+  float position : "GeometryDash.exe", 0x4E82E8, 0x1A0, 0x870, 0x81C;
+  int scene : "GeometryDash.exe", 0x4E82E8, 0x21C;
+  double timer : "GeometryDash.exe", 0x4E82E8, 0x198, 0x2C18;
+  bool levelComplete : "GeometryDash.exe", 0x4E82E8, 0x198, 0x2C20;
+}
+
 startup {
 	vars.loadingLevel = false;
+	vars.totalTime = 0d;
+	settings.Add("classic", false, "Classic Mode");
 	if (timer.CurrentTimingMethod == TimingMethod.RealTime)
 	{        
 		var timingMessage = MessageBox.Show (
@@ -23,25 +34,88 @@ startup {
 	}
 }
 
-isLoading{return vars.loadingLevel;}
+init
+{
+	int moduleSize = modules.First().ModuleMemorySize;
+	print("[GD ASL] Main Module Size: "+moduleSize.ToString());
+	if (moduleSize == 6873088) {
+		version = "2.11";
+	} else if (moduleSize == 8884224) {
+		version = "2.2";
+	} else {
+		version = "Unsupported: " + moduleSize.ToString();
+		MessageBox.Show("This game version is currently not supported.", "LiveSplit Auto Splitter - Unsupported Game Version");
+	}
+}
 
-split{return old.percentage != current.percentage && current.percentage == "100";}
+onStart {
+	vars.totalTime = 0d;
+}
 
-start{return old.position == 0 && current.position != 0;} 
+isLoading { 
+	if (settings["classic"] || version == "2.11") {
+		return vars.loadingLevel;
+	} else {
+		return true;
+	}
+}
+
+gameTime {
+	if (!settings["classic"] && version != "2.11") {
+		if (old.timer > current.timer) {
+			vars.totalTime += old.timer;
+		}
+		return TimeSpan.FromSeconds(vars.totalTime + current.timer);
+	}
+}
+
+split {
+	if (settings["classic"] || version == "2.11") {
+		return old.percentage != current.percentage && current.percentage == "100";
+	} else {
+		return !old.levelComplete && current.levelComplete;
+	}
+}
+
+start {
+	if (settings["classic"] || version == "2.11") {
+		return old.position == 0 && current.position != 0;
+	} else {
+		return old.timer == 0 && current.timer != 0;
+	}
+} 
 
 update {
+	/*
 	print("[GD ASL] Level Percentage: " + current.percentage + 
 	"\n[GD ASL] Player Position: " + current.position.ToString() +
 	"\n[GD ASL] Loading Music ? " + current.loadingMusic.ToString() +
 	"\n[GD ASL] Loading Level ? " + vars.loadingLevel.ToString());
-	if(!old.loadingMusic && current.loadingMusic) {
-		vars.loadingLevel = true;
+	*/
+	/*
+	print("[GD ASL] Current Timer: " + current.timer.ToString() + 
+	"\n[GD ASL] Total Time: " + vars.totalTime.ToString());
+	*/
+	if (version.Contains("Unsupported")) {
+		return false;
 	}
-	if(current.scene == 0) {
-		vars.loadingLevel = false;
+
+	if (settings["classic"] || version == "2.11") {
+		if (!old.loadingMusic && current.loadingMusic) {
+			vars.loadingLevel = true;
+		}
+		if (current.scene == 0) {
+			vars.loadingLevel = false;
+		}
+
+		if (version == "2.11") {
+			if (old.position == 0 && current.position != 0) {
+				vars.loadingLevel = false;
+			}
+		} else {
+			if (old.timer == 0 && current.timer != 0) {
+				vars.loadingLevel = false;
+			}
+		}
 	}
-	if(old.position == 0 && current.position != 0) {
-		vars.loadingLevel = false;
-	}
-	
 }
