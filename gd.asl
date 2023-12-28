@@ -7,7 +7,7 @@ state("GeometryDash", "2.11"){
 
 state("GeometryDash", "2.2"){
   bool loadingMusic : "GeometryDash.exe", 0x4E82C0, 0x128, 0x0, 0x0, 0x40;
-  string3 percentage : "GeometryDash.exe", 0x4E82E8, 0x198, 0xC0, 0x34, 0xC, 0x1C, 0x148;
+  string3 percentage : "GeometryDash.exe", 0x4E82E8, 0x198, 0x2E30, 0x148;
   float position : "GeometryDash.exe", 0x4E82E8, 0x1A0, 0x870, 0x81C;
   int scene : "GeometryDash.exe", 0x4E82E8, 0x21C;
   double timer : "GeometryDash.exe", 0x4E82E8, 0x198, 0x2C18;
