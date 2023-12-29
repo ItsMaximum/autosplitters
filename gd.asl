@@ -69,6 +69,14 @@ gameTime {
 	}
 }
 
+reset {
+	if (!settings["classic"] && version != "2.11") {
+		if (old.timer > current.timer && timer.CurrentSplitIndex == 0) {
+			return true;
+		}
+	}
+}
+
 split {
 	if (settings["classic"] || version == "2.11") {
 		return old.percentage != current.percentage && current.percentage == "100";
