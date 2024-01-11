@@ -14,12 +14,20 @@ state("GeometryDash", "2.2"){
   bool levelComplete : "GeometryDash.exe", 0x4E82E8, 0x198, 0x2C20;
 }
 
-state("GeometryDash", "2.201"){
+state("GeometryDash", "2.202"){
   bool loadingMusic : "GeometryDash.exe", 0x4ED2E8, 0x128, 0x0, 0x0, 0x40;
   float position : "GeometryDash.exe", 0x4ED310, 0x198, 0x878, 0x834;
   int scene : "GeometryDash.exe", 0x4ED310, 0x21C;
   double timer : "GeometryDash.exe", 0x4ED310, 0x198, 0x2C20;
   bool levelComplete : "GeometryDash.exe", 0x4ED310, 0x198, 0x2C28;
+}
+
+state("GeometryDash", "2.203"){
+  bool loadingMusic : "GeometryDash.exe", 0x4F0308, 0x128, 0x0, 0x0, 0x40;
+  float position : "GeometryDash.exe", 0x4F0330, 0x198, 0x878, 0x834;
+  int scene : "GeometryDash.exe", 0x4F0330, 0x21C;
+  double timer : "GeometryDash.exe", 0x4F0330, 0x198, 0x2C20;
+  bool levelComplete : "GeometryDash.exe", 0x4F0330, 0x198, 0x2C28;
 }
 
 startup {
@@ -53,7 +61,9 @@ init
 	} else if (moduleSize == 8884224) {
 		version = "2.2";
 	} else if (moduleSize == 8904704) {
-        version = "2.201";
+        version = "2.202";
+    } else if (moduleSize == 8921088) {
+        version = "2.203";
     } else {
 		version = "Unsupported: " + moduleSize.ToString();
 		MessageBox.Show("This game version is currently not supported.", "LiveSplit Auto Splitter - Unsupported Game Version");
