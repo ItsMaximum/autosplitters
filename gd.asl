@@ -86,8 +86,9 @@ onStart {
 isLoading { 
 	if (settings["classic"] || version == "2.11") {
         if (!old.loadingMusic && current.loadingMusic) {
-			vars.loadingLevel = true;
+            vars.loadingLevel = !vars.loadingLevel;
 		}
+        
 		if (current.scene == 0) {
 			vars.loadingLevel = false;
 		}
