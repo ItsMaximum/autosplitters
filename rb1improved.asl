@@ -5,12 +5,12 @@ state("Flash Player"){
 }
 
 startup {
-	refreshRate = 31;
+    refreshRate = 31;
     vars.split = false;
     vars.gameTime = TimeSpan.FromSeconds(0);
     vars.debug = false;
 	if (timer.CurrentTimingMethod == TimingMethod.RealTime)
-	{        
+	{
 		var timingMessage = MessageBox.Show (
 			"This game uses Time without Loads (Game Time) as the main timing method.\n"+
 			"LiveSplit is currently set to show Real Time (RTA).\n"+
@@ -52,9 +52,11 @@ reset {
 
 update {
     int adjustedFrames = current.frames;
-    if (current.freeze > 0 && old.freeze == 0) {
+    if (current.freeze != 0 && old.freeze == 0) {
         vars.split = true;
-        if (current.freeze > 87) { // Level 12 or 17
+        if (current.freeze < 0) { // Level 17
+            adjustedFrames = current.frames - (-1 - current.freeze);
+        } else if (current.freeze > 87) { // Level 12
             adjustedFrames = current.frames - (310 - current.freeze);
         } else { // other levels
             adjustedFrames = current.frames - (87 - current.freeze);
