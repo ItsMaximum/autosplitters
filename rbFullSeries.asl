@@ -115,7 +115,7 @@ update {
       case "Red Ball 4 Vol.3":
         vars.endLevels = new List<int>() { 15 };
         vars.freezes = new List<int>() { 90 };
-        vars.level = new MemoryWatcher<int>(new DeepPointer("Flash64_11_5_502_149.ocx", 0x11F3FA8, 0x0, 0x78, 0xB0, 0x10, 0xD0, 0xA0));
+        vars.level = new MemoryWatcher<int>(new DeepPointer("Flash64_11_5_502_149.ocx", 0x125DE78, 0x90, 0x3F0, 0x18, 0x0, 0xA0));
         break;
       default:
         return false;
