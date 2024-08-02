@@ -95,7 +95,7 @@ update {
     switch (secondStringSplit[secondStringSplit.Length - 1]) {
       case "Red Ball":
         vars.endLevels = new List<int>() { 12, 17 };
-        vars.freezes = new List<int>() { 87, 310 };
+        vars.freezes = new List<int>() { 88, 311 };
         vars.framerate = 31.0;
         refreshRate = 31;
         vars.level = new MemoryWatcher<int>(new DeepPointer("Flash64_11_5_502_149.ocx", 0x125FBC0, 0xA0, 0x288, 0x40, 0x0, 0xAC));
