@@ -38,6 +38,14 @@ state("GeometryDash", "2.204"){
   bool levelComplete : "GeometryDash.exe", 0x4F0330, 0x198, 0x2C28;
 }
 
+state("GeometryDash", "2.206"){
+  bool loadingMusic : "GeometryDash.exe", 0x687DC0, 0x198, 0x18, 0x30, 0x138;
+  float position : "GeometryDash.exe", 0x687E10, 0x208, 0xD98, 0xA90;
+  int scene : "GeometryDash.exe", 0x687E10, 0x218;
+  double timer : "GeometryDash.exe", 0x687E10, 0x208, 0x3488;
+  bool levelComplete : "GeometryDash.exe", 0x687E10, 0x208, 0x3490;
+}
+
 startup {
 	vars.loadingLevel = false;
     vars.debug = false;
@@ -73,6 +81,8 @@ init
         version = "2.202";
     } else if (moduleSize == 8921088) {
         version = "2.204";
+	} else if (moduleSize == 10473472) {
+		version = "2.206";
     } else {
 		version = "Unsupported: " + moduleSize.ToString();
 		MessageBox.Show("This game version is currently not supported.", "LiveSplit Auto Splitter - Unsupported Game Version");
@@ -163,6 +173,7 @@ update {
         "\n[GD ASL] Loading Music ? " + current.loadingMusic.ToString() +
         "\n[GD ASL] Loading Level ? " + vars.loadingLevel.ToString() +
         "\n[GD ASL] Current Timer: " + current.timer.ToString() +
-        "\n[GD ASL] Total Time: " + vars.totalTime.ToString());
+        "\n[GD ASL] Total Time: " + vars.totalTime.ToString() +
+        "\n[GD ASL] Classic Mode: " + settings["classic"].ToString());
     }
 }
