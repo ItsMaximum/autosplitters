@@ -1,14 +1,6 @@
 state("ActiveX Flash Player") {
-  int frames : "Flash64_11_5_502_149.ocx", 0x125DE78, 0x90, 0x3F0, 0x10, 0x0, 0xA0;
-  int freeze : "Flash64_11_5_502_149.ocx", 0x125DE78, 0x90, 0x3F0, 0x10, 0x0, 0x98;
-  string300 path: "Flash64_11_5_502_149.ocx", 0x11F42A8;
-  int openFrames : "Flash64_11_5_502_149.ocx", 0x125DE78, 0x1CC;
 }
 state("Full Series") {
-  int frames : "Flash64_11_5_502_149.ocx", 0x125DE78, 0x90, 0x3F0, 0x10, 0x0, 0xA0;
-  int freeze : "Flash64_11_5_502_149.ocx", 0x125DE78, 0x90, 0x3F0, 0x10, 0x0, 0x98;
-  string300 path: "Flash64_11_5_502_149.ocx", 0x11F42A8;
-  int openFrames : "Flash64_11_5_502_149.ocx", 0x125DE78, 0x1CC;
 }
 
 startup {
@@ -36,7 +28,19 @@ startup {
 }
 
 init {
-  if (current.path == "") throw new Exception(">>>>> Game Version has not been found yet!");
+    vars.frames = new MemoryWatcher<int>(new DeepPointer("Flash64_11_5_502_149.ocx", 0x125DE78, 0x90, 0x3F0, 0x10, 0x0, 0xA0));
+    vars.freeze = new MemoryWatcher<int>(new DeepPointer("Flash64_11_5_502_149.ocx", 0x125DE78, 0x90, 0x3F0, 0x10, 0x0, 0x98));
+    vars.path = new StringWatcher(new DeepPointer("Flash64_11_5_502_149.ocx", 0x11F42A8), 300);
+    vars.openFrames = new MemoryWatcher<int>(new DeepPointer("Flash64_11_5_502_149.ocx", 0x125DE78, 0x1CC));
+    
+    vars.frames.FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
+    vars.freeze.FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
+    vars.path.FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
+    vars.openFrames.FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
+
+    vars.path.Update(game);
+
+  if (vars.path.Current == "") throw new Exception(">>>>> Game Version has not been found yet!");
 
   vars.lastLevelSplit = 0;
   vars.prevGameTime = TimeSpan.FromSeconds(0);
@@ -50,7 +54,7 @@ reset {
   if (!vars.betweenGames &&
     !vars.endLevels.Contains(vars.level.Old) &&
     vars.level.Current == 0 ||
-    (old.frames > 0 && current.frames == 0)) {
+    (vars.frames.Old > 0 && vars.frames.Current == 0)) {
       return true;
   }
 }
@@ -78,16 +82,20 @@ onReset {
 }
 
 update {
-  if (!vars.gameSet || current.openFrames < old.openFrames) {
+  vars.path.Update(game);
+  vars.openFrames.Update(game);
+  vars.frames.Update(game);
+  vars.freeze.Update(game);
+  if (!vars.gameSet || vars.openFrames.Current < vars.openFrames.Old) {
     vars.gameSet = false;
-    if (vars.gameName != "" && old.path == current.path) { // If a game has previously been set, make sure the path has updated
+    if (vars.gameName != "" && vars.path.Old == vars.path.Current) { // If a game has previously been set, make sure the path has updated
       return false;
     }
 
     vars.endLevels = new List<int>();
     vars.freezes = new List<int>();
     
-    String[] firstStringSplit = current.path.Split(new string[] { " - Tournament Edition" }, StringSplitOptions.None);
+    String[] firstStringSplit = vars.path.Current.Split(new string[] { " - Tournament Edition" }, StringSplitOptions.None);
     String[] secondStringSplit = firstStringSplit[0].Split(new string[] { "\\" }, StringSplitOptions.None);
     vars.framerate = 30.0;
     refreshRate = 30;
@@ -133,19 +141,19 @@ update {
   }
   
   if (!vars.betweenGames && timer.CurrentPhase == TimerPhase.Running) {
-    int adjustedFrames = current.frames;
-    if (vars.lastLevelSplit != vars.level.Current && current.freeze != 0 && old.freeze == 0) {
+    vars.adjustedFrames = vars.frames.Current;
+    if (vars.lastLevelSplit != vars.level.Current && vars.freeze.Current != 0 && vars.freeze.Old == 0) {
       vars.lastLevelSplit = vars.level.Current;
       if (!settings["gameSplit"]) {
         vars.split = true;
       }
 
-      if (current.freeze < 0) {
-        adjustedFrames = current.frames - (-1 - current.freeze);
-      } else if (vars.freezes.Count > 1 && current.freeze > vars.freezes[0]) {
-        adjustedFrames = current.frames - (vars.freezes[1] - current.freeze);
+      if (vars.freeze.Current < 0) {
+        vars.adjustedFrames = vars.frames.Current - (-1 - vars.freeze.Current);
+      } else if (vars.freezes.Count > 1 && vars.freeze.Current > vars.freezes[0]) {
+        vars.adjustedFrames = vars.frames.Current - (vars.freezes[1] - vars.freeze.Current);
       } else {
-        adjustedFrames = current.frames - (vars.freezes[0] - current.freeze);
+        vars.adjustedFrames = vars.frames.Current - (vars.freezes[0] - vars.freeze.Current);
       }
 
       if ((settings["fsAny"] && vars.level.Current == vars.endLevels[0])
@@ -156,32 +164,33 @@ update {
       }
     }
 
-    vars.gameTime = vars.prevGameTime + TimeSpan.FromSeconds(adjustedFrames / vars.framerate);
+    vars.gameTime = vars.prevGameTime + TimeSpan.FromSeconds(vars.adjustedFrames / vars.framerate);
     if (vars.betweenGames) {
-      vars.prevGameTime += TimeSpan.FromSeconds(adjustedFrames / vars.framerate);
+      vars.prevGameTime += TimeSpan.FromSeconds(vars.adjustedFrames / vars.framerate);
     }
   }
-
+  
   vars.level.Update(game);
 
   if ((vars.level.Current == 1 || settings["anyStart"]) &&
-    ((current.frames < old.frames && current.frames > 0) ||
-    (current.frames > 0 && old.frames == 0))) { // Started timer in level 1
+    ((vars.frames.Current < vars.frames.Old && vars.frames.Current > 0) ||
+    (vars.frames.Current > 0 && vars.frames.Old == 0))) { // Started timer in level 1
     
     vars.betweenGames = false;
     vars.TimerModel.Start();
   }
 
   if (vars.debug) {
-    print("[RB ASL] Current Frames: " + current.frames + 
-    "\n[RB ASL] Current Freeze: " + current.freeze +
+    print("[RB ASL] Current Frames: " + vars.frames.Current + 
+    "\n[RB ASL] Current Freeze: " + vars.freeze.Current +
     "\n[RB ASL] Current Level: " + vars.level.Current +
     "\n[RB ASL] Game Set: " + vars.gameSet +
     "\n[RB ASL] Game Name: " + vars.gameName +
     "\n[RB ASL] Between Games?: " + vars.betweenGames +
-    "\n[RB ASL] Open Frames: " + current.openFrames + 
+    "\n[RB ASL] Open Frames: " + vars.openFrames.Current + 
     "\n[RB ASL] Previous Game Time: " + vars.prevGameTime.ToString() +
     "\n[RB ASL] Overall Game Time: " + vars.gameTime.ToString() +
-    "\n[RB ASL] Last Level Split: " + vars.lastLevelSplit);
+    "\n[RB ASL] Last Level Split: " + vars.lastLevelSplit +
+    "\n[RB ASL] Frame Rate: " + vars.framerate);
   }
 }
