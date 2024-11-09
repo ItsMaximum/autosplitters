@@ -46,6 +46,14 @@ state("GeometryDash", "2.206"){
   bool levelComplete : "GeometryDash.exe", 0x687E10, 0x208, 0x3490;
 }
 
+state("GeometryDash", "2.207"){
+	bool loadingMusic : "GeometryDash.exe", 0x6A3E18, 0x198, 0x70, 0x0, 0x5C;
+	float position : "GeometryDash.exe", 0x6A3E68, 0x208, 0xD98, 0x4C;
+	int scene : "GeometryDash.exe", 0x6A3E68, 0x2BC;
+	double timer : "GeometryDash.exe", 0x6A3E68, 0x208, 0x3C8;
+	bool levelComplete : "GeometryDash.exe", 0x6A3E68, 0x208, 0x3490;
+}
+
 startup {
 	vars.loadingLevel = false;
     vars.debug = false;
@@ -83,6 +91,8 @@ init
         version = "2.204";
 	} else if (moduleSize == 10473472) {
 		version = "2.206";
+	} else if (moduleSize == 10592256) {
+		version = "2.207";
     } else {
 		version = "Unsupported: " + moduleSize.ToString();
 		MessageBox.Show("This game version is currently not supported.", "LiveSplit Auto Splitter - Unsupported Game Version");
