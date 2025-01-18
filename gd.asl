@@ -47,10 +47,10 @@ state("GeometryDash", "2.206"){
 }
 
 state("GeometryDash", "2.207"){
-	bool loadingMusic : "GeometryDash.exe", 0x6A4E18, 0x198, 0x70, 0x0, 0x5C;
+	bool loadingMusic : "GeometryDash.exe", 0x6A4E18, 0x230, 0x90, 0x118, 0x18;
 	float position : "GeometryDash.exe", 0x6A4E68, 0x208, 0xD98, 0x4C;
 	int scene : "GeometryDash.exe", 0x6A4E68, 0x2BC;
-	double timer : "GeometryDash.exe", 0x6A4E68, 0x208, 0x3C8;
+	double timer : "GeometryDash.exe", 0x6A4E68, 0x208, 0x3488;
 	bool levelComplete : "GeometryDash.exe", 0x6A4E68, 0x208, 0x3490;
 }
 
