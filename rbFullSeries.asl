@@ -53,8 +53,8 @@ init {
 reset {
   if (!vars.betweenGames &&
     !vars.endLevels.Contains(vars.level.Old) &&
-    vars.level.Current == 0 ||
-    (vars.frames.Old > 0 && vars.frames.Current == 0)) {
+    (vars.level.Current == 0 && !vars.gameName.Contains("Red & Blue Balls")) ||
+    (vars.frames.Old > 1 && vars.frames.Current <= 1)) {
       return true;
   }
 }
@@ -102,6 +102,7 @@ update {
 
     switch (secondStringSplit[secondStringSplit.Length - 1]) {
       case "Red Ball":
+        vars.startLevels = new List<int>() { 1, 13 };
         vars.endLevels = new List<int>() { 12, 17 };
         vars.freezes = new List<int>() { 88, 311 };
         vars.framerate = 31.0;
@@ -109,11 +110,13 @@ update {
         vars.level = new MemoryWatcher<int>(new DeepPointer("Flash64_11_5_502_149.ocx", 0x125FBC0, 0xA0, 0x288, 0x40, 0x0, 0xAC));
         break;
       case "Red Ball 2":
+        vars.startLevels = new List<int>() { 1, 21 };
         vars.endLevels = new List<int>() { 20, 25 };
         vars.freezes = new List<int>() { 46 };
         vars.level = new MemoryWatcher<int>(new DeepPointer("Flash64_11_5_502_149.ocx", 0x1279658, 0x198, 0x50, 0xD0, 0x180, 0xB4));
         break;
       case "Red Ball 3":
+        vars.startLevels = new List<int>() { 1 };
         vars.endLevels = new List<int>() { 20 };
         vars.freezes = new List<int>() { 46 };
         vars.level = new MemoryWatcher<int>(new DeepPointer("Flash64_11_5_502_149.ocx", 0x125DE78, 0x90, 0x3F0, 0x18, 0x0, 0xB4));
@@ -121,9 +124,23 @@ update {
       case "Red Ball 4 Vol.1":
       case "Red Ball 4 Vol.2":
       case "Red Ball 4 Vol.3":
+        vars.startLevels = new List<int>() { 1 };
         vars.endLevels = new List<int>() { 15 };
         vars.freezes = new List<int>() { 90 };
         vars.level = new MemoryWatcher<int>(new DeepPointer("Flash64_11_5_502_149.ocx", 0x125DE78, 0x90, 0x3F0, 0x18, 0x0, 0xA0));
+        break;
+      case "Red & Blue Balls":
+        vars.startLevels = new List<int>() { 1, 16 };
+        vars.endLevels = new List<int>() { 15, 20 };
+        vars.freezes = new List<int>() { 46 };
+        vars.level = new MemoryWatcher<int>(new DeepPointer("Flash64_11_5_502_149.ocx", 0x1279658, 0x198, 0x50, 0xD0, 0x128, 0xB4));
+        break;
+      case "Red & Blue Balls 2":
+      case "Red & Blue Balls 3":
+        vars.startLevels = new List<int>() { 1, 26 };
+        vars.endLevels = new List<int>() { -1 };
+        vars.freezes = new List<int>() { 40 };
+        vars.level = new MemoryWatcher<int>(new DeepPointer("Flash64_11_5_502_149.ocx", 0x12798C0, 0xAE0, 0xE8, 0x1A8, 0x120, 0xBC));
         break;
       default:
         return false;
@@ -157,7 +174,8 @@ update {
       }
 
       if ((settings["fsAny"] && vars.level.Current == vars.endLevels[0])
-        || (vars.level.Current == vars.endLevels[vars.endLevels.Count - 1])) {
+        || (vars.level.Current == vars.endLevels[vars.endLevels.Count - 1])
+        || (vars.endLevels[0] == -1 && vars.freeze.Current < 0)) { // rabb 2/3
         vars.split = true;
         vars.betweenGames = true;
         vars.lastLevelSplit = 0;
@@ -172,9 +190,9 @@ update {
   
   vars.level.Update(game);
 
-  if ((vars.level.Current == 1 || settings["anyStart"]) &&
+  if ((vars.startLevels.Contains(vars.level.Current) || settings["anyStart"]) &&
     ((vars.frames.Current < vars.frames.Old && vars.frames.Current > 0) ||
-    (vars.frames.Current > 0 && vars.frames.Old == 0))) { // Started timer in level 1
+    (vars.frames.Current > 1 && vars.frames.Old <= 1))) { // Started timer in level 1
     
     vars.betweenGames = false;
     vars.TimerModel.Start();
