@@ -2,10 +2,16 @@ state("ActiveX Flash Player") {
 }
 state("Full Series") {
 }
+state("All Flash Games") {
+}
+state("Trifecta") {
+}
+state("Red & Blue Balls") {
+}
 
 startup {
   vars.gameTime = TimeSpan.FromSeconds(0);
-  vars.debug = false;
+  vars.debug = true;
   vars.TimerModel = new TimerModel { CurrentState = timer };
   settings.Add("fsAny", false, "Freeze after Levels 12 and 20 in Red Ball 1 and 2 (Full Series Any% Mode)");
   settings.Add("gameSplit", false, "Only split after finishing each game");
@@ -140,7 +146,7 @@ update {
         vars.startLevels = new List<int>() { 1, 26 };
         vars.endLevels = new List<int>() { -1 };
         vars.freezes = new List<int>() { 40 };
-        vars.level = new MemoryWatcher<int>(new DeepPointer("Flash64_11_5_502_149.ocx", 0x12798C0, 0xAE0, 0xE8, 0x1A8, 0x120, 0xBC));
+        vars.level = new MemoryWatcher<int>(new DeepPointer("Flash64_11_5_502_149.ocx", 0x125DE78, 0x68, 0xA50, 0x700));
         break;
       default:
         return false;
