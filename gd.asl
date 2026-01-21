@@ -1,3 +1,5 @@
+// scene is 0 on main menu, 1 in gauntlets, 8 in main level menu, etc.
+
 state("GeometryDash", "2.11"){
   bool loadingMusic : "GeometryDash.exe", 0x3222A8, 0x128, 0x34, 0xC0, 0xC;
   string3 percentage : "GeometryDash.exe", 0x3222D0, 0x164, 0x124, 0xEC, 0x2A4, 0xE8, 0x8, 0x12C;
@@ -47,11 +49,30 @@ state("GeometryDash", "2.206"){
 }
 
 state("GeometryDash", "2.207"){
-	bool loadingMusic : "GeometryDash.exe", 0x6A4E18, 0x230, 0x90, 0x118, 0x18;
+	bool loadingMusic : "GeometryDash.exe", 0x6A4E18, 0x198, 0x70, 0x0, 0x5C;
 	float position : "GeometryDash.exe", 0x6A4E68, 0x208, 0xD98, 0x4C;
 	int scene : "GeometryDash.exe", 0x6A4E68, 0x2BC;
-	double timer : "GeometryDash.exe", 0x6A4E68, 0x208, 0x3488;
+	double timer : "GeometryDash.exe", 0x6A4E68, 0x208, 0x3C8;
 	bool levelComplete : "GeometryDash.exe", 0x6A4E68, 0x208, 0x3490;
+	float timewarp : "GeometryDash.exe", 0x6A4E68, 0x100, 0x38;
+}
+
+state("GeometryDash", "2.208"){
+	bool loadingMusic : "GeometryDash.exe", 0x6C1E88, 0x230, 0x90, 0x118, 0x18;
+	float position : "GeometryDash.exe", 0x6C1ED8, 0x208, 0xDA0, 0x4C;
+	int scene : "GeometryDash.exe", 0x6C1ED8, 0x2BC;
+	double timer : "GeometryDash.exe", 0x6C1ED8, 0x208, 0x3D0;
+	bool levelComplete : "GeometryDash.exe", 0x6C1ED8, 0x208, 0x3570;
+	float timewarp : "GeometryDash.exe", 0x6C1ED8, 0x100, 0x38;
+}
+
+state("GeometryDash", "2.2081"){
+	bool loadingMusic : "GeometryDash.exe", 0x6C2E88, 0x230, 0x90, 0x118, 0x18;
+	float position : "GeometryDash.exe", 0x6C2ED8, 0x208, 0xDA0, 0x4C;
+	int scene : "GeometryDash.exe", 0x6C2ED8, 0x2BC;
+	double timer : "GeometryDash.exe", 0x6C2ED8, 0x208, 0x3D0;
+	bool levelComplete : "GeometryDash.exe", 0x6C2ED8, 0x208, 0x3570;
+	float timewarp : "GeometryDash.exe", 0x6C2ED8, 0x100, 0x38;
 }
 
 startup {
@@ -93,7 +114,11 @@ init
 		version = "2.206";
 	} else if (moduleSize == 10600448) {
 		version = "2.207";
-    } else {
+	} else if (moduleSize == 10719232) {
+		version = "2.208";
+    } else if (moduleSize == 10723328) {
+		version = "2.2081";
+	} else {
 		version = "Unsupported: " + moduleSize.ToString();
 		MessageBox.Show("This game version is currently not supported.", "LiveSplit Auto Splitter - Unsupported Game Version");
 	}
@@ -155,8 +180,11 @@ split {
         if (!old.levelComplete && current.levelComplete) {
             vars.stopwatch.Start();
         }
+
+		// approximate quadratic curve, covers 1.00-2.00x timewarp cases
+		vars.msToWait = (0.457143 * current.timewarp * current.timewarp - 1.85143 * current.timewarp + 2.37762) * 1000;
         
-        if (vars.stopwatch.Elapsed.TotalMilliseconds >= 983) {
+        if (vars.stopwatch.Elapsed.TotalMilliseconds >= vars.msToWait) {
             vars.stopwatch.Reset();
             return true;
         }
@@ -184,6 +212,7 @@ update {
         "\n[GD ASL] Loading Level ? " + vars.loadingLevel.ToString() +
         "\n[GD ASL] Current Timer: " + current.timer.ToString() +
         "\n[GD ASL] Total Time: " + vars.totalTime.ToString() +
-        "\n[GD ASL] Classic Mode: " + settings["classic"].ToString());
+        "\n[GD ASL] Classic Mode: " + settings["classic"].ToString() +
+		"\n[GD ASL] Timewarp: " + current.timewarp.ToString());
     }
 }
