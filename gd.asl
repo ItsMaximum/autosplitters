@@ -1,4 +1,5 @@
 // scene is 0 on main menu, 1 in gauntlets, 8 in main level menu, etc.
+// states where timewarp is set to 1 do not have timewarp support
 
 state("GeometryDash", "2.11"){
   bool loadingMusic : "GeometryDash.exe", 0x3222A8, 0x128, 0x34, 0xC0, 0xC;
@@ -14,6 +15,7 @@ state("GeometryDash", "2.2"){
   int scene : "GeometryDash.exe", 0x4E82E8, 0x21C;
   double timer : "GeometryDash.exe", 0x4E82E8, 0x198, 0x2C18;
   bool levelComplete : "GeometryDash.exe", 0x4E82E8, 0x198, 0x2C20;
+  float timewarp : "GeometryDash.exe", 0x4E82E8, 0xD8, 0x34;
 }
 
 state("GeometryDash", "2.202"){
@@ -22,6 +24,7 @@ state("GeometryDash", "2.202"){
   int scene : "GeometryDash.exe", 0x4ED310, 0x21C;
   double timer : "GeometryDash.exe", 0x4ED310, 0x198, 0x2C20;
   bool levelComplete : "GeometryDash.exe", 0x4ED310, 0x198, 0x2C28;
+  float timewarp : 1;
 }
 
 state("GeometryDash", "2.203"){
@@ -30,6 +33,7 @@ state("GeometryDash", "2.203"){
   int scene : "GeometryDash.exe", 0x4F0330, 0x21C;
   double timer : "GeometryDash.exe", 0x4F0330, 0x198, 0x2C20;
   bool levelComplete : "GeometryDash.exe", 0x4F0330, 0x198, 0x2C28;
+  float timewarp : 1;
 }
 
 state("GeometryDash", "2.204"){
@@ -38,6 +42,7 @@ state("GeometryDash", "2.204"){
   int scene : "GeometryDash.exe", 0x4F0330, 0x21C;
   double timer : "GeometryDash.exe", 0x4F0330, 0x198, 0x2C20;
   bool levelComplete : "GeometryDash.exe", 0x4F0330, 0x198, 0x2C28;
+  float timewarp : 1;
 }
 
 state("GeometryDash", "2.206"){
@@ -46,6 +51,7 @@ state("GeometryDash", "2.206"){
   int scene : "GeometryDash.exe", 0x687E10, 0x2BC;
   double timer : "GeometryDash.exe", 0x687E10, 0x208, 0x3488;
   bool levelComplete : "GeometryDash.exe", 0x687E10, 0x208, 0x3490;
+  float timewarp : 1;
 }
 
 state("GeometryDash", "2.207"){
